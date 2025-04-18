@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot IA</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #chat-box { margin-top: 20px; }
+        .message { margin: 10px 0; }
+        .user { font-weight: bold; color: blue; }
+        .bot { font-weight: bold; color: green; }
+    </style>
+</head>
+<body>
+    <h1>Chatbot IA</h1>
+    <div>
+        <input type="text" id="user-input" placeholder="Digite sua pergunta...">
+        <button onclick="sendMessage()">Enviar</button>
+    </div>
+    <div id="chat-box"></div>
+
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById('user-input').value;
+            if (!userInput) return;
+
+            // Exibe a mensagem do usuário
+            const chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML += `<div class="message user">${userInput}</div>`;
+
+            // Envia a mensagem para a API do backend
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question: userInput })
+            });
+
+            const data = await response.json();
+
+            // Exibe a resposta do chatbot
+            chatBox.innerHTML += `<div class="message bot">${data.answer}</div>`;
+            document.getElementById('user-input').value = '';
+        }
+    </script>
+</body>
+</html>
